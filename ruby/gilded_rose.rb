@@ -15,27 +15,37 @@ class GildedRose
   end
 
   def pre_update_item_quality(item)
-    if item.name == "Aged Brie" || item.name == "Backstage passes to a TAFKAL80ETC concert"
+    case item.name
+    when "Aged Brie"
       increment_item_quality(item)
-      if item.name == "Backstage passes to a TAFKAL80ETC concert"
-        increment_item_quality(item) if item.sell_in < 11
-        increment_item_quality(item) if item.sell_in < 6
+    when "Backstage passes to a TAFKAL80ETC concert"
+      increment_item_quality(item)
+      if item.sell_in < 11
+        increment_item_quality(item)
+      end
+      if item.sell_in < 6
+        increment_item_quality(item)
       end
     else
-      decrement_item_quality(item)
+      if item.quality > 0
+        decrement_item_quality(item)
+      end
     end
   end
 
   def post_update_item_quality(item)
-    if item.sell_in < 0
-      if item.name == "Aged Brie"
+    case item.name
+    when "Aged Brie"
+      if item.sell_in < 0
         increment_item_quality(item)
-      else
-        if item.name == "Backstage passes to a TAFKAL80ETC concert"
-          item.quality = 0
-        else
-          decrement_item_quality(item)
-        end
+      end
+    when "Backstage passes to a TAFKAL80ETC concert"
+      if item.sell_in < 0
+        item.quality = 0
+      end
+    else
+      if item.sell_in < 0
+        decrement_item_quality(item)
       end
     end
   end
