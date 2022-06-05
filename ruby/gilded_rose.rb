@@ -6,65 +6,49 @@ class GildedRose
 
   def update_quality()
     @items.each do |item|
+      next if item.name == "Sulfuras, Hand of Ragnaros"
+
       pre_update_item_quality(item)
-      if item.name != "Sulfuras, Hand of Ragnaros"
-        item.sell_in -= 1
-      end
+      item.sell_in -= 1
       post_update_item_quality(item)
     end
   end
 
   def pre_update_item_quality(item)
     if item.name == "Aged Brie" || item.name == "Backstage passes to a TAFKAL80ETC concert"
-      if item.quality < 50
-        increment_item_quality(item)
-        if item.name == "Backstage passes to a TAFKAL80ETC concert"
-          if item.sell_in < 11
-            if item.quality < 50
-              increment_item_quality(item)
-            end
-          end
-          if item.sell_in < 6
-            if item.quality < 50
-              increment_item_quality(item)
-            end
-          end
-        end
+      increment_item_quality(item)
+      if item.name == "Backstage passes to a TAFKAL80ETC concert"
+        increment_item_quality(item) if item.sell_in < 11
+        increment_item_quality(item) if item.sell_in < 6
       end
     else
-      if item.quality > 0
-        if item.name != "Sulfuras, Hand of Ragnaros"
-          decrement_item_quality(item)
-        end
-      end
+      decrement_item_quality(item)
     end
   end
 
   def post_update_item_quality(item)
     if item.sell_in < 0
       if item.name == "Aged Brie"
-        if item.quality < 50
-          increment_item_quality(item)
-        end
+        increment_item_quality(item)
       else
         if item.name == "Backstage passes to a TAFKAL80ETC concert"
           item.quality = 0
         else
-          if item.quality > 0
-            if item.name != "Sulfuras, Hand of Ragnaros"
-              decrement_item_quality(item)
-            end
-          end
+          decrement_item_quality(item)
         end
       end
     end
   end
 
   def increment_item_quality(item)
+    return unless item.quality < 50
+
     item.quality += 1
   end
 
   def decrement_item_quality(item)
+    return unless item.quality > 0
+
     item.quality -= 1
   end
 end
