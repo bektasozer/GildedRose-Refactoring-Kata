@@ -20,33 +20,21 @@ class GildedRose
       increment_item_quality(item)
     when "Backstage passes to a TAFKAL80ETC concert"
       increment_item_quality(item)
-      if item.sell_in < 11
-        increment_item_quality(item)
-      end
-      if item.sell_in < 6
-        increment_item_quality(item)
-      end
+      increment_item_quality(item) if item.sell_in < 11
+      increment_item_quality(item) if item.sell_in < 6
     else
-      if item.quality > 0
-        decrement_item_quality(item)
-      end
+      decrement_item_quality(item)
     end
   end
 
   def post_update_item_quality(item)
     case item.name
     when "Aged Brie"
-      if item.sell_in < 0
-        increment_item_quality(item)
-      end
+      increment_item_quality(item) if item.sell_in < 0
     when "Backstage passes to a TAFKAL80ETC concert"
-      if item.sell_in < 0
-        item.quality = 0
-      end
+      item.quality = 0 if item.sell_in < 0
     else
-      if item.sell_in < 0
-        decrement_item_quality(item)
-      end
+      decrement_item_quality(item) if item.sell_in < 0
     end
   end
 
